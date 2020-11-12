@@ -220,6 +220,20 @@ buffer is not visiting a file."
 (global-set-key (kbd "M-8") (lambda () (interactive) (my-term "s8")))
 (global-set-key (kbd "M-9") 'open-shell-as-root)
 
+;; Meta doesn't work on mac for whatever reason
+(if (eq system-type 'darwin)
+    (progn (global-set-key (kbd "s-0") (lambda () (interactive) (my-term "s0")))
+	   (global-set-key (kbd "s-1") (lambda () (interactive) (my-term "s1")))
+	   (global-set-key (kbd "s-2") (lambda () (interactive) (my-term "s2")))
+	   (global-set-key (kbd "s-3") (lambda () (interactive) (my-term "s3")))
+	   (global-set-key (kbd "s-4") (lambda () (interactive) (my-term "s4")))
+	   (global-set-key (kbd "s-5") (lambda () (interactive) (my-term "s5")))
+	   (global-set-key (kbd "s-6") (lambda () (interactive) (my-term "s6")))
+	   (global-set-key (kbd "s-7") (lambda () (interactive) (my-term "s7")))
+	   (global-set-key (kbd "s-8") (lambda () (interactive) (my-term "s8")))
+	   (global-set-key (kbd "s-9") 'open-shell-as-root)))
+
+
 (setq same-window-regexps '("s[[:digit:]]"))
 
 ;; Cache TRAMP passwords forever
