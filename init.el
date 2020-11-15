@@ -264,7 +264,8 @@ buffer is not visiting a file."
    ("f" format-fun "Format function definition/call")
    ("j" join-line "Join line")
    ("d" duplicate-line "Duplicate line")
-   ("M-m" back-to-indentation "Back to indentation")))
+   ("M-m" back-to-indentation "Back to indentation")
+   ("<RET>" make-frame-command "New frame"))
 (put 'set-goal-column 'disabled nil)
 
 ;; Magit
