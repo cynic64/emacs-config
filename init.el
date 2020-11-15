@@ -279,7 +279,7 @@ buffer is not visiting a file."
    ("j" join-line "Join line")
    ("d" duplicate-line "Duplicate line")
    ("M-m" back-to-indentation "Back to indentation")
-   ("<RET>" make-frame-command "New frame"))
+   ("<RET>" make-frame-command "New frame")))
 (put 'set-goal-column 'disabled nil)
 
 ;; Magit
