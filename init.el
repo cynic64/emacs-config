@@ -203,7 +203,7 @@ buffer is not visiting a file."
     (progn
       (set-buffer (make-term "new-terminal" "/bin/bash"))
       (term-mode)
-      (term-line-mode)
+      (term-char-mode)
       (switch-to-buffer "*new-terminal*")
       (rename-buffer name))))
 
@@ -233,6 +233,12 @@ buffer is not visiting a file."
 	   (global-set-key (kbd "s-8") (lambda () (interactive) (my-term "s8")))
 	   (global-set-key (kbd "s-9") 'open-shell-as-root)))
 
+;; Make C-x behave normally in term mode
+(add-hook 'term-mode-hook (lambda ()
+                            (let (term-escape-char)
+                              (term-set-escape-char ?\C-x))
+                            (let (term-escape-char)
+                              (term-set-escape-char ?\C-c))))
 
 (setq same-window-regexps '("s[[:digit:]]"))
 
