@@ -26,7 +26,7 @@ There are two things you can do about this warning:
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
    '("b89a4f5916c29a235d0600ad5a0849b1c50fab16c2c518e1d98f0412367e7f97" "7451f243a18b4b37cabfec57facc01bd1fe28b00e101e488c61e1eed913d9db9" default))
- '(package-selected-packages '(dracula-theme magit hydra emms)))
+ '(package-selected-packages '(vterm dracula-theme magit hydra emms)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -200,25 +200,20 @@ buffer is not visiting a file."
   (interactive)
   (if (get-buffer name)
       (switch-to-buffer name)
-    (progn
-      (set-buffer (make-term "new-terminal" "/bin/bash"))
-      (term-mode)
-      (term-char-mode)
-      (switch-to-buffer "*new-terminal*")
-      (rename-buffer name))))
+    (vterm name)))
 
 (setq elp-function-list '(ansi-term-in-default-dir))
 
-(global-set-key (kbd "M-0") (lambda () (interactive) (my-term "s0")))
-(global-set-key (kbd "M-1") (lambda () (interactive) (my-term "s1")))
-(global-set-key (kbd "M-2") (lambda () (interactive) (my-term "s2")))
-(global-set-key (kbd "M-3") (lambda () (interactive) (my-term "s3")))
-(global-set-key (kbd "M-4") (lambda () (interactive) (my-term "s4")))
-(global-set-key (kbd "M-5") (lambda () (interactive) (my-term "s5")))
-(global-set-key (kbd "M-6") (lambda () (interactive) (my-term "s6")))
-(global-set-key (kbd "M-7") (lambda () (interactive) (my-term "s7")))
-(global-set-key (kbd "M-8") (lambda () (interactive) (my-term "s8")))
-(global-set-key (kbd "M-9") 'open-shell-as-root)
+(global-set-key (kbd "C-0") (lambda () (interactive) (my-term "s0")))
+(global-set-key (kbd "C-1") (lambda () (interactive) (my-term "s1")))
+(global-set-key (kbd "C-2") (lambda () (interactive) (my-term "s2")))
+(global-set-key (kbd "C-3") (lambda () (interactive) (my-term "s3")))
+(global-set-key (kbd "C-4") (lambda () (interactive) (my-term "s4")))
+(global-set-key (kbd "C-5") (lambda () (interactive) (my-term "s5")))
+(global-set-key (kbd "C-6") (lambda () (interactive) (my-term "s6")))
+(global-set-key (kbd "C-7") (lambda () (interactive) (my-term "s7")))
+(global-set-key (kbd "C-8") (lambda () (interactive) (my-term "s8")))
+(global-set-key (kbd "C-9") 'open-shell-as-root)
 
 ;; Meta doesn't work on mac for whatever reason
 (if (eq system-type 'darwin)
