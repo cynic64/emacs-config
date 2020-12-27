@@ -26,7 +26,7 @@ There are two things you can do about this warning:
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
    '("b89a4f5916c29a235d0600ad5a0849b1c50fab16c2c518e1d98f0412367e7f97" "7451f243a18b4b37cabfec57facc01bd1fe28b00e101e488c61e1eed913d9db9" default))
- '(package-selected-packages '(vterm dracula-theme magit hydra emms)))
+ '(package-selected-packages '(emms vterm dracula-theme magit hydra)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -76,6 +76,15 @@ There are two things you can do about this warning:
 (defun my-c-mode-hook ()
   (column-number-mode))
 (add-hook 'c-mode-common-hook 'my-c-mode-hook)
+
+;; EMMS
+(if (eq system-type 'gnu/linux)
+    (progn (require 'emms-setup)
+	   (emms-all)
+	   (setq emms-source-file-default-directory "~/msc/collection/")
+	   (define-emms-simple-player play '(file) (emms-player-simple-regexp "mp3" "flac")
+	     "mplayer"  "-slave" "-quiet" "-really-quiet" "-novideo")
+	   (setq emms-player-list '(emms-player-play))))
 
 ;; M-g M-p pipes region through perl -wle <minibuffer input>
 (setq shell-file-name "/bin/bash")
@@ -252,17 +261,6 @@ buffer is not visiting a file."
 
 ;; Backups go in ~/.emacs.d/backups/
 (setq backup-directory-alist `(("." . "~/.emacs.d/backups/")))
-
-;; EMMS
-(if (eq system-type 'gnu/linux)
-    (progn (require 'emms-setup)
-	   (emms-all)
-	   (emms-default-players)
-	   (setq emms-source-file-default-directory "~/msc/collection/")
-	   (global-set-key (kbd "M-SPC") 'emms-pause)
-	   (emms-add-directory-tree emms-source-file-default-directory)))
-
-(global-set-key (kbd "<XF86AudioStop>") 'emms)
 
 ;; Ido
 (ido-mode 1)
