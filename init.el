@@ -28,6 +28,7 @@
   (evil-define-key 'insert 'global (kbd "C-e") 'end-of-line)
   (evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
   (evil-define-key 'normal 'global (kbd "<tab>") 'indent-for-tab-command)
+  (evil-define-key 'normal 'global (kbd "/") 'swiper)
   (evil-add-hjkl-bindings help-mode-map completion-list-mode-map
     (kbd "/")       'evil-search-forward
     (kbd "n")       'evil-search-next
@@ -102,6 +103,70 @@
 
 (use-package magit)
 
+(use-package lsp-mode
+  :config
+  (add-hook 'c-mode-common-hook 'lsp))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-mode-enable nil)
+  (setq lsp-ui-doc-enable nil))
+
+(use-package ccls
+  :config
+  (setq ccls-executable "/usr/bin/ccls"))
+
+(use-package smartparens
+  :ensure t
+  :config
+  (require 'smartparens-config))
+
+(use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-idle-delay 0))
+
+(use-package general :ensure t
+	     :config
+	     (general-define-key
+	      :states '(normal visual)
+	      :prefix "SPC"
+	      :non-normal-prefix "M-m"
+	      ;; Project
+	      "p m" '(magit-status :which-key "magit")
+	      ;; Buffer
+	      "b b" '(switch-to-buffer :which-key "switch buffer")
+	      "b SPC" '(switch-to-prev-buffer :which-key "prev buffer")
+	      ;; File
+	      "f f" '(find-file :which-key "find file")
+	      ;; Execute
+	      "x e" '(eval-buffer :which-key "eval buffer")))
+
+(use-package which-key
+  :config
+  (which-key-mode 1)
+  (setq which-key-idle-delay 0.3))
+
+(use-package rainbow-delimiters
+  :config
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  ;; Make swiper place nice with evil
+  (defun swiper-advice (&rest r)
+    (setq isearch-string (substring-no-properties (car swiper-history)))
+    (evil-search-previous))
+  (advice-add 'swiper :after #'swiper-advice)
+  (setq lazy-highlight-cleanup nil)
+  (setq ivy-re-builders-alist '((t . ivy--regex-plus))))
+
+(use-package counsel
+  :config
+  (counsel-mode 1))
+
 ;; Shell-related stuff
 (setq explicit-shell-file-name "/bin/bash")
 (setq shell-file-name "/bin/bash")
@@ -146,21 +211,3 @@
 ;; Better buffer switching
 (setq pop-up-frames 'graphic-only)
 (setq ido-default-buffer-method 'selected-window)
-
-(use-package general :ensure t
-	     :config
-	     (general-define-key
-	      :keymaps '(normal visual emacs)
-	      :prefix "SPC"
-	      :non-normal-prefix "M-m"
-	      ;; Project
-	      "p m" '(magit-status :which-key "magit")
-	      ;; Buffer
-	      "b b" '(switch-to-buffer :which-key "switch")
-	      ;; Execute
-	      "x e" '(eval-buffer :which-key "eval buffer")))
-
-(use-package which-key
-  :config
-  (which-key-mode)
-  (setq which-key-idle-delay 0.3))
