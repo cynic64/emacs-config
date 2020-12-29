@@ -165,6 +165,9 @@
 	      "M-}" 'sp-wrap-curly
 	      "M-]" 'sp-wrap-square
 	      "M-)" 'sp-wrap-round)
+	     (general-define-key
+	      :keymaps 'ivy-minibuffer-map
+	      "<tab>" 'ivy-alt-done)
 	     (general-override-mode 1))
 
 (use-package which-key
@@ -191,6 +194,16 @@
 (use-package counsel
   :config
   (counsel-mode 1))
+
+(use-package prescient
+  :config
+  (prescient-persist-mode 1))
+(use-package ivy-prescient
+  :config
+  (ivy-prescient-mode 1))
+(use-package company-prescient
+  :config
+  (company-prescient-mode 1))
 
 (use-package projectile
   :config
@@ -256,3 +269,15 @@
 ;; Better buffer switching
 (setq pop-up-frames 'graphic-only)
 (setq ido-default-buffer-method 'selected-window)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
