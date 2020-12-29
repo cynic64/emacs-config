@@ -8,4 +8,5 @@ tramp
 transient/*
 url/*
 recentf
+.lsp-session-v1
 *~

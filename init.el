@@ -29,6 +29,8 @@
   (evil-define-key 'insert 'global (kbd "C-a") 'beginning-of-line)
   (evil-define-key 'normal 'global (kbd "<tab>") 'indent-for-tab-command)
   (evil-define-key 'normal 'global (kbd "/") 'swiper)
+  (evil-define-key 'insert 'global (kbd "C-n") 'company-select-next)
+  (evil-define-key 'insert 'global (kbd "C-p") 'company-select-previous)
   (evil-add-hjkl-bindings help-mode-map completion-list-mode-map
     (kbd "/")       'evil-search-forward
     (kbd "n")       'evil-search-next
@@ -103,9 +105,15 @@
 
 (use-package magit)
 
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
+
 (use-package lsp-mode
   :config
-  (add-hook 'c-mode-common-hook 'lsp))
+  (add-hook 'c-mode-common-hook 'lsp)
+  (setq lsp-clients-clangd-executable "/usr/lib/llvm/11/bin/clangd"))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -113,35 +121,37 @@
   (setq lsp-ui-sideline-mode-enable nil)
   (setq lsp-ui-doc-enable nil))
 
-(use-package ccls
-  :config
-  (setq ccls-executable "/usr/bin/ccls"))
-
 (use-package smartparens
   :ensure t
   :config
-  (require 'smartparens-config))
+  (require 'smartparens-config)
+  (smartparens-global-mode 1))
 
 (use-package company
   :config
   (add-hook 'after-init-hook 'global-company-mode)
-  (setq company-idle-delay 0))
+  (setq company-idle-delay 0)
+  (add-to-list 'completion-styles 'partial-completion))
 
 (use-package general :ensure t
 	     :config
 	     (general-define-key
-	      :states '(normal visual)
+	      :states '(normal motion)
+	      :keymaps 'override
 	      :prefix "SPC"
-	      :non-normal-prefix "M-m"
+	      "SPC" 'execute-extended-command
 	      ;; Project
 	      "p m" '(magit-status :which-key "magit")
 	      ;; Buffer
 	      "b b" '(switch-to-buffer :which-key "switch buffer")
-	      "b SPC" '(switch-to-prev-buffer :which-key "prev buffer")
+	      "b SPC" '(switch-to-other-buffer :which-key "other buffer")
 	      ;; File
 	      "f f" '(find-file :which-key "find file")
+	      "f s" '(save-buffer :which-key "save file")
+	      "f w" '(write-file :which-key "write file")
 	      ;; Execute
-	      "x e" '(eval-buffer :which-key "eval buffer")))
+	      "x e" '(eval-buffer :which-key "eval buffer"))
+	     (general-override-mode 1))
 
 (use-package which-key
   :config
@@ -155,6 +165,8 @@
 (use-package ivy
   :config
   (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d)")
   ;; Make swiper place nice with evil
   (defun swiper-advice (&rest r)
     (setq isearch-string (substring-no-properties (car swiper-history)))
@@ -199,6 +211,11 @@
 	(if (eq arg nil)
 	    (shell-command-on-region p m real-command t t)
 	  (shell-command-on-region p m real-command))))))
+
+;; Switch to last-used buffer
+(defun switch-to-other-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
 
 ;; No GUI crap
 (menu-bar-mode -1)
