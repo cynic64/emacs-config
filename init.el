@@ -13,6 +13,7 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+(setq use-package-always-ensure t)
 
 ;; Theme
 (use-package doom-themes
@@ -105,6 +106,10 @@
 
 (use-package magit)
 
+(use-package evil-org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode))
+
 (use-package yasnippet
   :ensure t
   :config
@@ -113,7 +118,8 @@
 (use-package lsp-mode
   :config
   (add-hook 'c-mode-common-hook 'lsp)
-  (setq lsp-clients-clangd-executable "/usr/lib/llvm/11/bin/clangd"))
+  (setq lsp-clients-clangd-executable "/usr/lib/llvm/11/bin/clangd")
+  (setq lsp-enable-indentation nil))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -142,6 +148,7 @@
 	      "SPC" 'execute-extended-command
 	      ;; Project
 	      "p m" '(magit-status :which-key "magit")
+	      "p p" '(projectile-command-map :which-key "projectile")
 	      ;; Buffer
 	      "b b" '(switch-to-buffer :which-key "switch buffer")
 	      "b SPC" '(switch-to-other-buffer :which-key "other buffer")
@@ -150,7 +157,14 @@
 	      "f s" '(save-buffer :which-key "save file")
 	      "f w" '(write-file :which-key "write file")
 	      ;; Execute
-	      "x e" '(eval-buffer :which-key "eval buffer"))
+	      "x e" '(eval-buffer :which-key "eval buffer")
+	      ;; Modes
+	      "m s" '(smartparens-mode :which-key "smartparens"))
+	     (general-define-key
+	      :states '(normal motion)
+	      "M-}" 'sp-wrap-curly
+	      "M-]" 'sp-wrap-square
+	      "M-)" 'sp-wrap-round)
 	     (general-override-mode 1))
 
 (use-package which-key
@@ -169,8 +183,7 @@
   (setq ivy-count-format "(%d/%d)")
   ;; Make swiper place nice with evil
   (defun swiper-advice (&rest r)
-    (setq isearch-string (substring-no-properties (car swiper-history)))
-    (evil-search-previous))
+    (setq isearch-string (substring-no-properties (car swiper-history))))
   (advice-add 'swiper :after #'swiper-advice)
   (setq lazy-highlight-cleanup nil)
   (setq ivy-re-builders-alist '((t . ivy--regex-plus))))
@@ -179,6 +192,22 @@
   :config
   (counsel-mode 1))
 
+(use-package projectile
+  :config
+  (projectile-mode 1))
+
+;; Backups
+(let ((backup-dir "~/.emacs.d/backups/")
+      (auto-saves-dir "~/.emacs.d/backups/"))
+  (dolist (dir (list backup-dir auto-saves-dir))
+    (when (not (file-directory-p dir))
+      (make-directory dir t)))
+  (setq backup-directory-alist `(("." . ,backup-dir))
+        auto-save-file-name-transforms `((".*" ,auto-saves-dir t))
+        auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
+        tramp-backup-directory-alist `((".*" . ,backup-dir))
+        tramp-auto-save-directory auto-saves-dir))
+
 ;; Shell-related stuff
 (setq explicit-shell-file-name "/bin/bash")
 (setq shell-file-name "/bin/bash")
@@ -186,7 +215,6 @@
 ;; Wrapping
 (add-hook 'text-mode-hook 'auto-fill-mode)
 (add-hook 'c-mode-common-hook 'auto-fill-mode)
-(add-hook 'org-mode-hook 'auto-fill-mode)
 (setq-default fill-column 80)
 
 ;; C setup

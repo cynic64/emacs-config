@@ -1,3 +1,4 @@
+*~
 auto-save-list/*
 backups/*
 bookmarks
@@ -9,4 +10,5 @@ transient/*
 url/*
 recentf
 .lsp-session-v1
-*~
+projectile-bookmarks.eld
+projectile.cache
